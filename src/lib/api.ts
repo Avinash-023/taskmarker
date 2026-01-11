@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 // Get auth token from localStorage
 const getAuthToken = () => {
@@ -18,7 +18,7 @@ const removeAuthToken = () => {
 // API request helper
 const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
   const token = getAuthToken();
-  
+
   const config: RequestInit = {
     ...options,
     headers: {
@@ -38,10 +38,10 @@ const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
   return data;
 };
 
-// Auth API
+// ==================== AUTH API ====================
 export const authAPI = {
   register: async (fullName: string, email: string, password: string) => {
-    const data = await apiRequest('/auth/register', {
+    const data = await apiRequest('/api/auth/register', {
       method: 'POST',
       body: JSON.stringify({ fullName, email, password }),
     });
@@ -50,7 +50,7 @@ export const authAPI = {
   },
 
   login: async (email: string, password: string) => {
-    const data = await apiRequest('/auth/login', {
+    const data = await apiRequest('/api/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
@@ -63,86 +63,86 @@ export const authAPI = {
   },
 
   getCurrentUser: async () => {
-    return await apiRequest('/auth/me');
+    return await apiRequest('/api/auth/me');
   },
 };
 
-// Tasks API
+// ==================== TASKS API ====================
 export const tasksAPI = {
   getAll: async (filters?: { status?: string; priority?: string }) => {
     const params = new URLSearchParams(filters as any);
-    return await apiRequest(`/tasks?${params}`);
+    return await apiRequest(`/api/tasks?${params}`);
   },
 
   getById: async (id: string) => {
-    return await apiRequest(`/tasks/${id}`);
+    return await apiRequest(`/api/tasks/${id}`);
   },
 
   create: async (taskData: any) => {
-    return await apiRequest('/tasks', {
+    return await apiRequest('/api/tasks', {
       method: 'POST',
       body: JSON.stringify(taskData),
     });
   },
 
   update: async (id: string, taskData: any) => {
-    return await apiRequest(`/tasks/${id}`, {
+    return await apiRequest(`/api/tasks/${id}`, {
       method: 'PUT',
       body: JSON.stringify(taskData),
     });
   },
 
   delete: async (id: string) => {
-    return await apiRequest(`/tasks/${id}`, {
+    return await apiRequest(`/api/tasks/${id}`, {
       method: 'DELETE',
     });
   },
 
   getStats: async () => {
-    return await apiRequest('/tasks/stats/overview');
+    return await apiRequest('/api/tasks/stats/overview');
   },
 };
 
-// Notes API
+// ==================== NOTES API ====================
 export const notesAPI = {
   getAll: async (filters?: { tags?: string; search?: string }) => {
     const params = new URLSearchParams(filters as any);
-    return await apiRequest(`/notes?${params}`);
+    return await apiRequest(`/api/notes?${params}`);
   },
 
   getById: async (id: string) => {
-    return await apiRequest(`/notes/${id}`);
+    return await apiRequest(`/api/notes/${id}`);
   },
 
   create: async (noteData: any) => {
-    return await apiRequest('/notes', {
+    return await apiRequest('/api/notes', {
       method: 'POST',
       body: JSON.stringify(noteData),
     });
   },
 
   update: async (id: string, noteData: any) => {
-    return await apiRequest(`/notes/${id}`, {
+    return await apiRequest(`/api/notes/${id}`, {
       method: 'PUT',
       body: JSON.stringify(noteData),
     });
   },
 
   delete: async (id: string) => {
-    return await apiRequest(`/notes/${id}`, {
+    return await apiRequest(`/api/notes/${id}`, {
       method: 'DELETE',
     });
   },
 };
 
-// Profile API
+// ==================== PROFILE API ====================
 export const profileAPI = {
   get: async () => {
-    return await apiRequest('/profile');
+    return await apiRequest('/api/profile');
   },
 
   update: async (profileData: any) => {
-    return await apiRequest('/profile', {
+    return await apiRequest('/api/profile', {
       method: 'PUT',
       body: JSON.stringify(profileData),
     });
