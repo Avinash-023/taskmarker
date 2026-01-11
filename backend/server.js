@@ -13,11 +13,12 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+// ===== MIDDLEWARE =====
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:8080',
+  origin: process.env.CLIENT_URL,
   credentials: true
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -27,7 +28,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Routes
+// ===== ROUTES =====
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/notes', noteRoutes);
@@ -52,7 +53,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// MongoDB Connection
+// ===== MONGODB CONNECTION =====
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
@@ -63,20 +64,21 @@ const connectDB = async () => {
   }
 };
 
-// Start server
+// ===== START SERVER =====
 const startServer = async () => {
   await connectDB();
-  
+
   app.listen(PORT, () => {
+    const BASE_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
     console.log(`🚀 Server is running on port ${PORT}`);
-    console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`🌐 API URL: http://localhost:${PORT}`);
+    console.log(`📍 Environment: ${process.env.NODE_ENV}`);
+    console.log(`🌐 API URL: ${BASE_URL}`);
   });
 };
 
 startServer();
 
-// Graceful shutdown
+// ===== GRACEFUL SHUTDOWN =====
 process.on('SIGINT', async () => {
   console.log('\n⚠️  Shutting down gracefully...');
   await mongoose.connection.close();
